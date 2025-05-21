@@ -5,6 +5,7 @@ import ResultsDisplay from "@/components/ResultsDisplay";
 import { Question, QuizState } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Loader from "@/components/Loader";
 
 const QuizPage = () => {
   // State
@@ -164,7 +165,7 @@ const QuizPage = () => {
     <div className='flex flex-col gap-7 items-center min-h-[80vh] justify-center p-10 rounded-lg bg-secondary  mx-auto text-foreground'>
       <h1 className='text-4xl font-semibold md-4'>Quiz Time!</h1>
 
-      {quizStatus === "loading" && <p className='text-2xl'>Loading Quiz...</p>}
+      {quizStatus === "loading" && <Loader></Loader>}
 
       {quizStatus === "active" && actualQuestions.length > 0 && (
         <QuestionCard

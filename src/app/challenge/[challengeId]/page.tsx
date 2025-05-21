@@ -1,19 +1,14 @@
 "use client";
 import React from "react";
 import QuestionCard from "@/components/QuestionCard";
-import { Question } from "@/lib/types";
+import { Question, ChallengeDetails } from "@/lib/types";
 import { useEffect, useState } from "react";
+import Loader from "@/components/Loader";
 
 interface ChallengePageProps {
   params: {
     challengeId: string;
   };
-}
-
-//Temporary type for fetched challege Details
-interface ChallengeDetails {
-  originalScore: number;
-  questionIds: (string | number)[];
 }
 
 const ChallengePage = ({ params }: ChallengePageProps) => {
@@ -122,7 +117,7 @@ const ChallengePage = ({ params }: ChallengePageProps) => {
       <h1 className='text-4xl font-semibold md-4'>Friend Challenge!</h1>
       {quizStatus === "loading" ||
         quizStatus === "fetching_details" ||
-        (quizStatus === "fetching_questions" && <p>Loading Challenge...</p>)}
+        (quizStatus === "fetching_questions" && <Loader></Loader>)}
       {error && <p>{error}</p>}
 
       {/* Active quize for Challenger */}

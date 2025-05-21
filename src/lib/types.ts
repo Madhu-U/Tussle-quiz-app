@@ -1,6 +1,6 @@
 // Interface for questions
 export interface Question {
-  id: number | string;
+  id: string;
   text: string;
   options: string[];
   answer: string;
@@ -14,4 +14,9 @@ export interface QuizState {
   selectedAnswers: { [questionId: string]: string };
   score: number;
   quizStatus: "loading" | "active" | "completed";
+}
+
+export interface ChallengeDetails {
+  originalScore: number;
+  questionIds: string[];
 }

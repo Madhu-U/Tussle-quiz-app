@@ -1,11 +1,23 @@
 import { Question } from "@/lib/types";
-import questionsData from "@/lib/questions.json";
 import { NextResponse } from "next/server";
+import dbConnect from "@/lib/dbConnect";
+import QuestionModel, { IQuestion } from "@/lib/models/Question.model";
 
 export const GET = async () => {
   try {
-    const questions: Question[] = questionsData;
-    return NextResponse.json(questions);
+    await dbConnect();
+
+    const questions: IQuestion[] = await QuestionModel.find({});
+
+    const formattedQuestions: Question[] = questions.map((question) => ({
+      id: question._id.toString(),
+      text: question.text,
+      options: question.options,
+      answer: question.answer,
+      category: question.category,
+    }));
+
+    return NextResponse.json(formattedQuestions);
   } catch (error) {
     console.error(error);
     return NextResponse.json(
