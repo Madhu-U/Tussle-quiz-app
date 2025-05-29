@@ -8,11 +8,14 @@ import { useSearchParams } from "next/navigation";
 import Loader from "@/components/Loader";
 
 const QuizPage = () => {
-  // State
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{
-    [key: number | string]: string;
+    [key: number | string]: {
+      question: string;
+      selectedAnswer: string;
+      correctAnswer: string;
+    };
   }>({});
   const [score, setScore] = useState(0);
   const [quizStatus, setQuizStatus] =
@@ -43,6 +46,9 @@ const QuizPage = () => {
           ? categoriesParam.split(",")
           : [];
 
+        const questionsCount = parseInt(searchParams.get("count") || "10");
+        console.log("questionsCount", questionsCount);
+
         let filteredQuestions = allQuestions;
 
         if (selectedCategories.length > 0) {
@@ -54,11 +60,41 @@ const QuizPage = () => {
         } else {
           console.warn("No categories selected, showing all questions");
         }
+
+        const questionsChosen: Question[] = [];
+
+        const categoryMap: { [key: string]: Question[] } = {};
+        filteredQuestions.forEach((question) => {
+          if (question.category) {
+            if (categoryMap[question.category]) {
+              categoryMap[question.category].push(question);
+            } else {
+              categoryMap[question.category] = [question];
+            }
+          }
+        });
+
+        for (let i = 0; i < questionsCount; i++) {
+          const categoryKeys = Object.keys(categoryMap);
+          const randomCategory =
+            categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
+          const randomQuestion =
+            categoryMap[randomCategory][
+              Math.floor(Math.random() * categoryMap[randomCategory].length)
+            ];
+          if (
+            !questionsChosen.includes(randomQuestion) &&
+            questionsChosen.length < questionsCount
+          ) {
+            questionsChosen.push(randomQuestion);
+          }
+        }
+
         // Shuffle the filtered questions
-        filteredQuestions.sort(() => Math.random() - 0.5);
-        if (filteredQuestions.length > 0) {
-          setActualQuestions(filteredQuestions);
-          setQuestions(filteredQuestions);
+        questionsChosen.sort(() => Math.random() - 0.5);
+        if (questionsChosen.length > 0) {
+          setActualQuestions(questionsChosen);
+          setQuestions(questionsChosen);
           setQuizStatus("active"); //Start the quiz
         } else {
           //When filtering results in no questions
@@ -97,7 +133,11 @@ const QuizPage = () => {
     setSelectedAnswers((prevAnswers) => {
       return {
         ...prevAnswers,
-        [currentquestion.id]: selectedAnswer,
+        [currentquestion.id]: {
+          question: currentquestion.text,
+          correctAnswer: currentquestion.answer,
+          selectedAnswer,
+        },
       };
     });
 
@@ -163,8 +203,6 @@ const QuizPage = () => {
 
   return (
     <div className='flex flex-col gap-7 items-center min-h-[80vh] justify-center p-10 rounded-lg bg-secondary  mx-auto text-foreground'>
-      <h1 className='text-4xl font-semibold md-4'>Quiz Time!</h1>
-
       {quizStatus === "loading" && <Loader></Loader>}
 
       {quizStatus === "active" && actualQuestions.length > 0 && (
@@ -178,6 +216,7 @@ const QuizPage = () => {
 
       {quizStatus === "completed" && (
         <ResultsDisplay
+          selectedAnswers={selectedAnswers}
           score={score}
           totalQuestions={actualQuestions.length}
           onRestart={handleRestart}

@@ -14,17 +14,19 @@ const QuestionCard = ({
   totalQuestions,
 }: QuestionCardProps) => {
   return (
-    <div className='bg-primary p-4 rounded-lg flex flex-col gap-3'>
-      <p className='text-sm sm:text-base font-semibold font-body border-b-1 border-b-foreground pb-2'>
+    <div className='gradient-primary p-4 rounded-lg flex flex-col gap-3 max-w-[700px]'>
+      <p className='text-sm sm:text-base font-semibold font-body border-b-1 border-b-foreground pb-3 '>
         Question {questionNumber} of {totalQuestions}
       </p>
-      <h2 className='text-xl sm:text-2xl'>{question.text}</h2>
-      <div className='grid grid-cols-2 sm:grid-cols-4 gap-2 '>
+      <h2 className='text-xl sm:text-2xl font-medium sm:font-semibold my-3'>
+        {question.text}
+      </h2>
+      <div className='grid grid-cols-1 gap-3'>
         {question.options.map((option, index) => (
           <button
             key={index}
             onClick={() => onAnswerSelect(option)}
-            className='px-4 py-2 border-2 border-foreground rounded-lg hover:bg-foreground hover:font-semibold hover:text-background-dark transition-colors duration-200 ease-in-out'
+            className='px-4 py-2 font-medium border-2 border-foreground rounded-lg hover:bg-foreground  hover:text-background-dark transition-colors duration-200 ease-in-out cursor-pointer'
           >
             {option}
           </button>

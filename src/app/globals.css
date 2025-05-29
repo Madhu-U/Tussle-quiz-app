@@ -2,6 +2,7 @@
 
 @theme {
   --color-primary: #fe7743;
+  --color-primary-card: #ff9e60;
   --color-background: #273f4f;
   --color-foreground: #efeeea;
   --color-background-dark: #000000;
@@ -34,6 +35,22 @@
   }
 }
 
+.gradient-primary {
+  background: linear-gradient(135deg, #fe7743, #ff9e60);
+}
+
+.slider {
+  @apply appearance-none w-full h-8 bg-foreground border rounded-full;
+}
+
+.slider::-webkit-slider-thumb {
+  @apply appearance-none w-7 h-7 rounded-full  cursor-grab  shadow-md shadow-background-dark bg-gradient-to-br from-primary to-primary-card;
+}
+
+.slider::-moz-range-thumb {
+  @apply w-7 h-7 rounded-full border-none cursor-grab  shadow-md shadow-background-dark bg-gradient-to-br from-primary to-primary-card;
+}
+
 .font-body {
   font-family: "Montserrat", sans-serif;
 }
@@ -43,7 +60,7 @@
 }
 
 body {
-  background-color: var(--color-background-dark);
   color: var(--color-text);
   font-family: "Montserrat", sans-serif;
+  background: linear-gradient(to bottom, #0d0d0d, var(--color-background-dark));
 }
