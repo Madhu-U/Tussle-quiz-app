@@ -1,10 +1,11 @@
+// import Image from "next/image";
 import React from "react";
 
 const Header = () => {
   return (
-    <header className='w-full p-5 text-center text-foreground bg-background-dark border-b-2 border-b-foreground'>
-      <h1 className='text-2xl font-semibold uppercase tracking-wider font-heading'>
-        Quiz App
+    <header className='w-full  text-center text-foreground bg-foreground '>
+      <h1 className='text-6xl font-extrabold uppercase tracking-wider font-heading text-primary'>
+        TUSSLE
       </h1>
     </header>
   );
