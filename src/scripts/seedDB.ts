@@ -1,4 +1,4 @@
-import QuestionModel from "@/lib/models/Question.model";
+import QuestionModel from "../models/Question.model";
 import questionsData from "@/lib/questions.json";
 import mongoose from "mongoose";
 

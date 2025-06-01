@@ -3,11 +3,11 @@
 import QuestionCard from "@/components/QuestionCard";
 import ResultsDisplay from "@/components/ResultsDisplay";
 import { Question, QuizState } from "@/lib/types";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Loader from "@/components/Loader";
 
-const QuizPage = () => {
+const QuizPageContent = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{
@@ -21,6 +21,7 @@ const QuizPage = () => {
   const [quizStatus, setQuizStatus] =
     useState<QuizState["quizStatus"]>("loading");
   const [error, setError] = useState<string | null>(null);
+  console.log(error);
 
   //State for challenge link generation
   const [isGeneratingLink, setIsGeneratingLink] = useState(false);
@@ -191,11 +192,13 @@ const QuizPage = () => {
       } else {
         throw new Error("Challenge ID not received");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
-      alert(
-        `Error creating challenge link: ${error.message || "Please try again."}`
-      );
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert("Error creating challenge link: Please try again.");
+      }
     } finally {
       setIsGeneratingLink(false);
     }
@@ -229,4 +232,6 @@ const QuizPage = () => {
   );
 };
 
-export default QuizPage;
+export default function QuizPage() {
+  return <Suspense fallback={<Loader />}>{<QuizPageContent />}</Suspense>;
+}

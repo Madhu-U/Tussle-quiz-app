@@ -1,7 +1,7 @@
 import { Question } from "@/lib/types";
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import QuestionModel, { IQuestion } from "@/lib/models/Question.model";
+import QuestionModel, { IQuestion } from "../../../models/Question.model";
 
 export const GET = async () => {
   try {

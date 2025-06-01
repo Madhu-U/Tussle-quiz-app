@@ -1,7 +1,7 @@
 // src/app/api/challenge/route.ts
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import ChallengeModel from "@/lib/models/Challenge.model";
+import ChallengeModel from "../../../models/Challenge.model";
 import { Types } from "mongoose"; // Ensure Types is imported
 
 export async function POST(request: Request) {

@@ -1,5 +1,4 @@
 "use client";
-import { main } from "motion/react-client";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -33,14 +32,14 @@ export default function Home() {
 
   return (
     <main>
-      <div className='px-8 w-[95%] mx-auto pt-12 flex flex-col gap-5 max-w-[1000px]'>
-        <h1 className='font-heading text-4xl sm:text-5xl md:text-6xl font-extrabold uppercase bg-gradient-to-br from-primary to-[#ff9564] text-transparent bg-clip-text'>
+      <div className='px-8 w-[95%] mx-auto pt-12 flex sm:flex-row flex-col justify-between items-centergap-5 max-w-[1000px]'>
+        <h1 className='text-center sm:text-left font-heading text-4xl sm:text-5xl md:text-6xl font-extrabold uppercase bg-gradient-to-br from-primary to-[#ff9564] text-transparent bg-clip-text'>
           Think Fast. <br />
           Score Hard. <br />
           Tussle!
         </h1>
 
-        <ul className='text-foreground text-xl sm:text-2xl font-semibold font-heading text-right'>
+        <ul className='text-foreground text-xl sm:text-2xl font-semibold font-heading text-center'>
           <li className=''>Choose your favorite categories.</li>
           <li className=''>Answer the questions.</li>
           <li className=''>Share the challenge.</li>

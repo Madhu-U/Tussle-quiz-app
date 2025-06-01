@@ -1,17 +1,20 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import ChallengeModel from "@/lib/models/Challenge.model";
+import ChallengeModel from "../../../../models/Challenge.model";
 
-interface RouteContext {
-  params: {
-    challengeId: string;
-  };
-}
+// interface RouteContext {
+//   params: {
+//     challengeId: string;
+//   };
+// }
 
 // GET handler for fetching specific challenge details
-export async function GET(request: Request, context: RouteContext) {
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ challengeId: string }> }
+) {
   try {
-    const { challengeId } = context.params;
+    const { challengeId } = await params;
 
     if (!challengeId) {
       return NextResponse.json(
@@ -38,7 +41,7 @@ export async function GET(request: Request, context: RouteContext) {
       questionIds: questionIds,
     });
   } catch (error) {
-    console.error(`Failed to fetch challenge ${params?.challengeId}:`, error);
+    console.error(`Failed to fetch challenge :`, error);
     return NextResponse.json(
       { error: "Failed to load challenge details" },
       { status: 500 }

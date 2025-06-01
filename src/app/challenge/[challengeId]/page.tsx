@@ -6,25 +6,23 @@ import { useEffect, useState } from "react";
 import Loader from "@/components/Loader";
 
 interface ChallengePageProps {
-  params: {
+  params: Promise<{
     challengeId: string;
-  };
+  }>;
 }
 
 const ChallengePage = ({ params }: ChallengePageProps) => {
-  // const resolvedParams = React.use(params);
-  const { challengeId } = params;
-
+  const [challengeId, setChallengeId] = useState<string | null>(null);
   const [challengeDetails, setChallengeDetails] =
     useState<ChallengeDetails | null>(null);
-  const [allQuestions, setAllQuestions] = useState<Question[]>([]);
+  // const [allQuestions, setAllQuestions] = useState<Question[]>([]);
   const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
 
   // State for the challenger's quiz attempt
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<{
-    [questionId: string]: string;
-  }>({});
+  // const [selectedAnswers, setSelectedAnswers] = useState<{
+  //   [questionId: string]: string;
+  // }>({});
   const [challengerScore, setChallengerScore] = useState(0);
   const [quizStatus, setQuizStatus] = useState<
     | "loading"
@@ -34,12 +32,20 @@ const ChallengePage = ({ params }: ChallengePageProps) => {
     | "active"
     | "completed"
     | "error"
-  >("fetching_details");
+  >("loading");
   const [error, setError] = useState<string | null>(null);
+
+  // Effect to resolve params Promise
+  useEffect(() => {
+    params.then((resolvedParams) => {
+      setChallengeId(resolvedParams.challengeId);
+    });
+  }, [params]);
 
   useEffect(() => {
     const loadChallenge = async () => {
       if (!challengeId) {
+        if (challengeId === null) return; // Still loading params
         setError("Invalid Challenge link.");
         setQuizStatus("error");
         return;
@@ -61,7 +67,7 @@ const ChallengePage = ({ params }: ChallengePageProps) => {
         if (!questionsRes.ok) throw new Error("Failed to fetch questions");
 
         const allQuestionsData: Question[] = await questionsRes.json();
-        setAllQuestions(allQuestionsData);
+        // setAllQuestions(allQuestionsData);
 
         //Filter and set the specific questions for this challenge
         const challengeQuestionIds = details.questionIds;
@@ -81,9 +87,13 @@ const ChallengePage = ({ params }: ChallengePageProps) => {
         } else {
           throw new Error("No questions found for this challenge");
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Error loading challenge details", err);
-        setError(err.message || "Failed to load challenge");
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Failed to load challenge");
+        }
         setQuizStatus("error");
       }
     };
@@ -99,10 +109,10 @@ const ChallengePage = ({ params }: ChallengePageProps) => {
     if (isCorrect) {
       setChallengerScore((prev) => prev + 1);
     }
-    setSelectedAnswers((prev) => ({
-      ...prev,
-      [currentQuestion.id]: selectedAnswer,
-    }));
+    // setSelectedAnswers((prev) => ({
+    //   ...prev,
+    //   [currentQuestion.id]: selectedAnswer,
+    // }));
 
     const nextIndex = currentQuestionIndex + 1;
     if (nextIndex < quizQuestions.length) {
@@ -115,9 +125,9 @@ const ChallengePage = ({ params }: ChallengePageProps) => {
   return (
     <div className='flex flex-col gap-7 items-center min-h-[80vh] justify-center font-medium p-10 rounded-lg bg-secondary  mx-auto text-foreground'>
       <h1 className='text-4xl font-semibold md-4'>Friend Challenge!</h1>
-      {quizStatus === "loading" ||
+      {(quizStatus === "loading" ||
         quizStatus === "fetching_details" ||
-        (quizStatus === "fetching_questions" && <Loader></Loader>)}
+        quizStatus === "fetching_questions") && <Loader></Loader>}
       {error && <p>{error}</p>}
 
       {/* Active quize for Challenger */}
