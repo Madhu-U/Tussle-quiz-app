@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     description: "Challenge your friends with interactive quizzes",
     images: [
       {
-        url: "/Mobile-demo.png",
+        url: "/metadata.png",
         width: 1200,
         height: 630,
         alt: "TUSSLE Quiz App",
